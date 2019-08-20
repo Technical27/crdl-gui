@@ -9,7 +9,7 @@ let window;
 
 const init = () => {
   window = new BrowserWindow({
-    icon: '../assets/icon.png',
+    icon: path.join(__dirname, '../assets/icons/512x512.png'),
     width: 812,
     height: 512,
     webPreferences: {
