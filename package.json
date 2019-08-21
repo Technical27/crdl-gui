@@ -19,17 +19,23 @@
   "config": {
     "forge": {
       "packagerConfig": {
-        "icon": "assets/icons/512x512.ico"
+        "icon": "assets/icons/512x512"
       },
       "makers": [
+        {
+          "name": "@electron-forge/maker-deb"
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "linux"
+          ]
+        },
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
             "name": "crdl_gui"
           }
-        },
-        {
-          "name": "@electron-forge/maker-zip"
         }
       ]
     }
@@ -44,6 +50,7 @@
   "devDependencies": {
     "@electron-forge/cli": "6.0.0-beta.44",
     "@electron-forge/maker-deb": "6.0.0-beta.44",
+    "@electron-forge/maker-dmg": "^6.0.0-beta.44",
     "@electron-forge/maker-rpm": "6.0.0-beta.44",
     "@electron-forge/maker-squirrel": "6.0.0-beta.44",
     "@electron-forge/maker-zip": "6.0.0-beta.44",
