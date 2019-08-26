@@ -12,34 +12,38 @@ class FNDL extends Downloader {
     this._pass = pass;
   }
 
-  async getMedia (url) {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.goto(`https://www.funimation.com/log-in/?returnUrl=${url}`);
-
-    await page.click('input#email2');
-    await page.type('input#email2', this._user);
-    await page.click('input#password2');
-    await page.type('input#password2', this._pass);
-
-    let found = false;
-    page.on('request', res => {
-      const url = res.url();
-      if (url.includes('.m3u8')) {
-        browser.close();
-        found = true;
-        return {subtitle: null, url};
-      }
-      res.continue();
-    });
-    await page.setRequestInterception(true);
-    await page.click('button.btn.margin-right-0');
-    setTimeout(() => {
-      if (!found) {
-        browser.close();
-        throw 'No Media';
-      }
-    }, 20000);
+  getMedia (url) {
+    return puppeteer.launch()
+      .then(browser => {
+        return browser.newPage()
+          .then(page => {
+            return page.goto(`https://www.funimation.com/log-in/?returnUrl=${url}`)
+              .then(() => page.click('input#email2'))
+              .then(() => page.type('input#email2', this._user))
+              .then(() => page.click('input#password2'))
+              .then(() => page.type('input#password2', this._pass))
+              .then(() => {
+                return new Promise ((resolve, reject) => {
+                  let found = false;
+                  page.on('request', res => {
+                    const url = res.url();
+                    if (url.includes('.m3u8')) {
+                      found = true;
+                      res.abort();
+                      browser.close();
+                      resolve({url, subtitle: null});
+                    }
+                    else res.continue();
+                  });
+                  page.setRequestInterception(true)
+                    .then(() => page.click('button.btn.margin-right-0'))
+                    .then(() => setTimeout(() => {
+                      if (!found) reject('Timeout on getting media');
+                    }, 20000));
+                });
+              });
+          });
+      });
   }
 }
 
