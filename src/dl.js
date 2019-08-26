@@ -4,7 +4,6 @@ const shell = require('shelljs');
 const path = require('path');
 
 ffmpeg.setFfmpegPath(require('ffmpeg-static').path); // eslint-disable-line global-require
-ffmpeg.setFfprobePath(require('ffprobe-static').path); // eslint-disable-line global-require
 
 class Downloader extends EventEmitter {
   constructor (tmpPath, i) {
