@@ -1,4 +1,5 @@
-const { app, BrowserWindow } = require('electron');
+const {app, BrowserWindow, ipcMain} = require('electron');
+const CRDL = require('./crdl');
 const path = require('path');
 
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -6,6 +7,23 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 }
 
 let window;
+let queSize = 0;
+
+ipcMain.on('start', (event, type, link) => {
+  if (queSize > 2) return;
+  if (type === 'crdl') {
+    console.log('starting');
+    const crdl = new CRDL();
+    crdl.on('progress', p => event.reply('update', 'crdl', crdl.instance, `${p}% done`));
+    crdl.on('status', s => event.reply('update', 'crdl', crdl.instance, s));
+    crdl.on('end', () => {
+      event.reply('end', 'crdl', crdl.instance);
+      queSize--;
+    });
+    crdl.start(link, false, '/home/aamaruvi/test.mp4');
+    queSize++;
+  }
+});
 
 const init = () => {
   window = new BrowserWindow({

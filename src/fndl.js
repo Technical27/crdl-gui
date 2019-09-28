@@ -12,7 +12,7 @@ class FNDL extends Downloader {
     this._pass = pass;
   }
 
-  getMedia (url) {
+  _getMedia (url) {
     return puppeteer.launch()
       .then(browser => {
         return browser.newPage()

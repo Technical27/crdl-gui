@@ -31,15 +31,15 @@ class Downloader extends EventEmitter {
     });
   }
 
-  getMedia () {
+  _getMedia () {
     return Promise.reject('No Media');
   }
 
   start (url, subtitles, output) {
     this.emit('status', 'starting');
-    this.getMedia(url)
+    this._getMedia(url)
       .then(media => {
-        this._ffmpeg = ffmpeg(media.url).addOption('-c copy');
+        this._ffmpeg = ffmpeg(media.link).addOption('-c copy');
 
         this._ffmpeg.addOutput(path.join(this._dlPath, 'download.mkv'));
     

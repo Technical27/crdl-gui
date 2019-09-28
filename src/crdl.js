@@ -13,8 +13,8 @@ class CRDL extends Downloader {
     return JSON.parse(line.trim().replace('vilos.config.media = ', '').replace(';', ''));
   }
 
-  getMedia (url) {
-    fetch(url)
+  _getMedia (url) {
+    return fetch(url)
       .then(html => html.text())
       .then(lines => {
         return new Promise((resolve, reject) => {
