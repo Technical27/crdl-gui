@@ -11,6 +11,7 @@ ipcRenderer.on('update', (event, type, instance, status) => {
 ipcRenderer.on('end', (event, type, instance) => {
   if (que.length) {
     ipcRenderer.send('start', 'crdl', que.shift());
+    $('#queLength').html(que.length);
   }
   else instances--;
   $(`#${type}${instance}`).remove();
@@ -20,11 +21,14 @@ $(document).ready(() => {
   $('#addLink').click(() => {
     const $link = $('#newLink');
     console.log('starting');
-    if (instances <= 2) {
+    if (instances < 2) {
       instances++;
       ipcRenderer.send('start', 'crdl', $link.val());
     }
-    else que.push($link.val());
+    else {
+      que.push($link.val());
+      $('#queLength').html(que.length);
+    }
     $link.val('');
   });
 });

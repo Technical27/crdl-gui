@@ -10,7 +10,7 @@ let window;
 let queSize = 0;
 
 ipcMain.on('start', (event, type, link) => {
-  if (queSize > 2) return;
+  if (queSize >= 2) return;
   if (type === 'crdl') {
     console.log('starting');
     const crdl = new CRDL();
