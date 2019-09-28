@@ -42,7 +42,6 @@
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
-    "ffmpeg-static": "^2.5.0",
     "fluent-ffmpeg": "^2.1.2",
     "jquery": "^3.4.1",
     "node-fetch": "^2.6.0",
