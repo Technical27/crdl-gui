@@ -10,7 +10,7 @@ let window;
 let queSize = 0;
 let downloadFolder;
 
-ipcMain.on('start', (event, type, link) => {
+ipcMain.on('start', (event, type, link, subtitle) => {
   if (queSize >= 2) return;
   if (type === 'crdl') {
     console.log('starting');
@@ -22,7 +22,7 @@ ipcMain.on('start', (event, type, link) => {
       queSize--;
     });
     while (!downloadFolder) downloadFolder = dialog.showOpenDialogSync({properties: ['openDirectory']});
-    crdl.start(link, false, path.join(downloadFolder[0], `${crdl.instance}.mp4`));
+    crdl.start(link, subtitle, path.join(downloadFolder[0], `${crdl.instance}.mp4`));
     queSize++;
   }
 });
