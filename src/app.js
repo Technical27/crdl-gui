@@ -1,4 +1,4 @@
-const {app, BrowserWindow, ipcMain} = require('electron');
+const {app, BrowserWindow, ipcMain, dialog} = require('electron');
 const CRDL = require('./crdl');
 const path = require('path');
 
@@ -8,6 +8,7 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 
 let window;
 let queSize = 0;
+let downloadFolder;
 
 ipcMain.on('start', (event, type, link) => {
   if (queSize >= 2) return;
@@ -20,7 +21,8 @@ ipcMain.on('start', (event, type, link) => {
       event.reply('end', 'crdl', crdl.instance);
       queSize--;
     });
-    crdl.start(link, false, '/home/aamaruvi/test.mp4');
+    while (!downloadFolder) downloadFolder = dialog.showOpenDialogSync({properties: ['openDirectory']});
+    crdl.start(link, false, path.join(downloadFolder[0], `${crdl.instance}.mp4`));
     queSize++;
   }
 });
